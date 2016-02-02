@@ -6,7 +6,7 @@ var http = require("http");
 // which it returns in a variable of the same name
 var fs = require("fs");
 
-var resource;
+var resourceContent;
 
 // Reading in the html directory
 fs.readdir("./html", function(err, data){
@@ -31,10 +31,11 @@ var myServer = http.createServer(function(req, res){
   var requestedResource = req.url == "/" ? "/index.html" : req.url;
   console.log("Recieved request for " + requestedResource);
 
-  // Getting the filetype of the resource by splitting the
-  // url at the "." and then taking the second half of this
-  // string
-  var typeOfResource = requestedResource.split(".")[1];
+  // Getting the filetype of the resource by finding the index of the last full stop in the
+  // requesting URL, and then using this to create a substring of everything that comes
+  // after this i.e. the filetype
+  var lastFullstop = requestedResource.lastIndexOf(".");
+  var typeOfResource = requestedResource.substr(lastFullstop + 1, requestedResource.length);
 
   // Creating a variable to store the status code and content
   // type for the response header (so I can change it depending on
@@ -42,37 +43,42 @@ var myServer = http.createServer(function(req, res){
   // it is).
   var statusCode;
   var contentType;
-  resource = fs.readFileSync("./html" + requestedResource);
+
+  // Reading in the contents of the resource the user has requested,
+  // which should be in the html folder of my current directory
+  resourceContent = fs.readFileSync("./html" + requestedResource);
 
   // Checking what type of resource the request was for
   if(typeOfResource == "html" || typeOfResource == "css" || typeOfResource == "js")
   {
     contentType = "text/" + typeOfResource;
-  }
-  else if(typeOfResource == "png" || typeOfResource == "jpg")
+  }else if(typeOfResource == "png" || typeOfResource == "jpg")
   {
     contentType = "image/" + typeOfResource;
+  }else if(typeOfResource == "woff")
+  {
+    contentType = "font/" + typeOfResource;
   }
 
   // Checking if there is content in the resource variable
-  if(resource.length > 1)
+  if(resourceContent.length > 1)
   {
     statusCode = 200;
   }else {
     statusCode = 404;
-
-    // Writing some HTML to the response body
-    res.write("<h1>Sorry :(</h1>We couldn't find what you were looking for.<br>You sent a request for " + requestedResource);
+    resourceContent = "<h1>Sorry :(</h1>We couldn't find what you were looking for.<br>You sent a request for " + requestedResource;
   }
 
   // Adding the content type to the response header
   res.writeHead(statusCode, {"Content-Type" : contentType});
 
   // Writing the resource to the body of the response
-  res.write(resource);
+  res.write(resourceContent);
 
   // Sending the response back to the client
   res.end();
+
+  console.log("Responded to request for" + requestedResource);
 });
 
 // Setting up a listener on port 3000, to listen for requests.
