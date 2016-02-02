@@ -9,7 +9,7 @@ var myServer = http.createServer(function(req, res){
   res.writeHead(200, {"Content-Type" : "text/html"});
 
   // Writing some HTML to the response body
-  res.write("<h1>Testing my Server");
+  res.write("<h1>Testing my Server</h1><br>You sent a request for " + req.url);
 
   // Sending the response back to the client
   res.end();
