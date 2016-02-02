@@ -30,22 +30,39 @@ var myServer = http.createServer(function(req, res){
   // is equal to whatever url was entered
   var requestedResource = req.url == "/" ? "/index.html" : req.url;
 
+  // Getting the filetype of the resource by splitting the
+  // url at the "." and then taking the second half of this
+  // string
+  var typeOfResource = requestedResource.split(".")[1];
+  console.log(typeOfResource);
+
+  // Creating a variable to store the status code and content
+  // type for the response header (so I can change it depending on
+  // if I could locate the resource or not, and what type of resource
+  // it is).
+  var statusCode = 200;
+  var contentType = "text/html";
+
   // If the requestedResource is the homepage
   if(requestedResource == "/index.html")
   {
     resource = fs.readFileSync("./html" + requestedResource);
-
-    // Adding the content type to the response header
-    res.writeHead(200, {"Content-Type" : "text/html"});
     res.write(resource);
   }
   else {
-    // Adding the content type to the response header
-    res.writeHead(404, {"Content-Type" : "text/html"});
+    statusCode = 404;
 
     // Writing some HTML to the response body
     res.write("<h1>Sorry :(</h1>We couldn't find what you were looking for.<br>You sent a request for " + requestedResource);
   }
+
+  if(typeOfResource == "png" || typeOfResource == "jpg")
+  {
+    console.log("HIIIIIIIIIIIIIIII");
+  }
+
+  // Adding the content type to the response header
+  res.writeHead(statusCode, {"Content-Type" : contentType});
 
   // Sending the response back to the client
   res.end();
