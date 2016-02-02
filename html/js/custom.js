@@ -1,13 +1,12 @@
 // Custom JS
-var contactArray = [{"firstName":"Tim","lastName":"Berners-Lee","phoneNumber":"001-234-5678","emailAddress":"inventor@www.com","dateOfBirth":"1955-06-07T23:00:00.000Z","notes":"Inventor of the World Wide Web","addToFavourites":true},{"firstName":"Brendan","lastName":"Eich","phoneNumber":"001-234-5678","emailAddress":"creater@javascript.com","dateOfBirth":false,"notes":"Creator of the JavaScript programming language.","addToFavourites":true},{"firstName":"James","lastName":"Gosling","phoneNumber":"001-234-5678","emailAddress":"creator@java.com","dateOfBirth":"1955-05-19T23:00:00.000Z","notes":"Creator of the Java programming language","addToFavourites":true},{"firstName":"Gary","lastName":"Grossman","phoneNumber":"001-234-5678","emailAddress":"developer@actionscript.com","dateOfBirth":false,"notes":"Primary developer of the ActionScript programming language","addToFavourites":true},{"firstName":"Steve","lastName":"Jobs","phoneNumber":"001-234-5678","emailAddress":"co-founder@apple.com","dateOfBirth":"1955-02-24T00:00:00.000Z","notes":"Co-founder of Apple & CEO of Pixar","addToFavourites":true},{"firstName":"Larry","lastName":"Page","phoneNumber":"001-234-5678","emailAddress":"co-founder@google.com","dateOfBirth":"1973-03-25T23:00:00.000Z","notes":"Co-founder of Google","addToFavourites":true},{"firstName":"Laura","lastName":"Pigott","phoneNumber":"0863331636","emailAddress":"pigottlaura@gmail.com","dateOfBirth":"1987-09-24T23:00:00.000Z","notes":"Passionate about web development, programming and particularly JavaScript","addToFavourites":true},{"firstName":"John","lastName":"Resig","phoneNumber":"001-234-5678","emailAddress":"creator@jQuery.com","dateOfBirth":"1984-05-07T23:00:00.000Z","notes":"Creator of the jQuery JavaScript library","addToFavourites":true}];
+
+var contactArray = [];
+var contactListSettings = {};
+var saveData = {settings: contactListSettings, contacts: contactArray};
 
 var searchResults = [];
 var searching = false;
-var contactListSettings = {
-	"currentContactIndex": -1,
-	"editContact": false,
-	"sortByFirstName": false,
-}
+
 getSavedContactListData();
 
 // Month Array
@@ -16,16 +15,16 @@ var monthValues = ["January", "February", "March", "April", "May", "June", "July
 window.onload = function () {
 	// Click Event Listener
 	document.body.addEventListener("click", pageClickHandler);
-	
+
 	// UPDATE PAGE INFORMATION BASED ON PRESCENE OF THE RELEVANT BODY TAG
 	// Home Page
 	if(document.getElementById("homePage") != null)
 	{
 		updateContactList();
-		
+
 		// Input Event Listener
 		document.getElementById("searchBar").addEventListener("input", searchBarInputEventHandler);
-		
+
 		// Sort Contacts Select Option
 		if(contactListSettings.sortByFirstName == true)
 		{
@@ -35,35 +34,35 @@ window.onload = function () {
 		{
 			document.getElementById("alphaOrder").value = "by Last Name";
 		}
-		
+
 		// Add Title to Sort Contacts Button
 		document.getElementById("sortContactsButton").setAttribute("title", "Currently Sorted by " + (contactListSettings.sortByFirstName ? "First Name" : "Last Name"));
 	}
-	
+
 	// Contact Details Page
 	if(document.getElementById("contactDetailsPage") != null)
 	{
 		updateContactDetailsSection();
 	}
-	
+
 	// Add Edit Page
 	if(document.getElementById("addEditPage") != null)
 	{
 		// Dynamically generate the dates for the Date of Birth Select Options
 		generateDates();
-		
+
 		// If Editing Existing Contact or Adding New Contact
 		if(contactListSettings.editContact)
 		{
 			editCurrentContact();
-			
+
 			// Show Delete Contact Button
 			document.getElementById("removeContactButton").style.display = "block";
 		}
 		else
 		{
 			clearInputFields();
-			
+
 			// Hide Delete Contact Button
 			document.getElementById("removeContactButton").style.display = "none";
 		}
@@ -74,7 +73,7 @@ window.onload = function () {
 function pageClickHandler(nsEvent)
 {
 	var theEvent = nsEvent ? nsEvent: window.event;
-	
+
 	// CLICK TARGETS CATAGORISED BY PAGE
 	// Home Page
 	if(theEvent.target.id == "addNewContact")
@@ -87,20 +86,20 @@ function pageClickHandler(nsEvent)
 		window.location = "index.html";
 	}
 	for(var i = 0; i< contactArray.length; i++)
-	{	
+	{
 		// Loop to check if the user clicked on one of the contacts in the list
 		if(theEvent.target.id == "contactIdNum" + i)
 		{
 			contactListSettings.currentContactIndex = i;
 			saveContactListData();
-			window.location = "html/contactDetails.html";			
+			window.location = "html/contactDetails.html";
 		}
 	}
 	if(theEvent.target.id == "removeAllContacts")
 	{
 		clearSavedContactList();
 	}
-	
+
 	// Add Edit Contact Page
 	if(theEvent.target.id == "cancelAddContact")
 	{
@@ -143,7 +142,7 @@ function pageClickHandler(nsEvent)
 		saveContactListData();
 		window.location = "../index.html";
 	}
-	
+
 	// Contact Details Page
 	if(theEvent.target.id == "viewAllContacts")
 	{
@@ -163,12 +162,12 @@ function searchBarInputEventHandler()
 	var	searchBarId = document.getElementById("searchBar");
 	searchResults = [];
 	var searchFor = searchBarId.value.toLowerCase();
-	
+
 	// If there is actually something typed in the searchbar
 	if(searchFor.length > 0)
 	{
 		searching = true;
-		
+
 		contactObjectLoop: for(contactObject in contactArray)
 		{
 			// If First and Last Name Both Match
@@ -213,7 +212,7 @@ function createContact()
 		{
 			removeCurrentContact();
 		}
-		
+
 		// Create New Contact Object
 		var contactObject = new Object;
 		contactObject.firstName = document.getElementById("fName").value;
@@ -232,10 +231,10 @@ function createContact()
 		{
 			contactObject.addToFavourites = false;
 		}
-		
+
 		// Add To Contact Array
-		contactArray.push(contactObject);	
-		
+		contactArray.push(contactObject);
+
 		// Sort Contact Array
 		if(contactListSettings.sortByFirstName == true)
 		{
@@ -245,11 +244,11 @@ function createContact()
 		{
 			sortContactsByLastName();
 		}
-		
+
 		// Save Contact List Data
 		contactListSettings.currentContactIndex = contactArray.indexOf(contactObject);
 		saveContactListData();
-		
+
 		// Return to Contact Details Page
 		window.location = "contactDetails.html";
 	}
@@ -261,7 +260,7 @@ function createContact()
 
 // Remove Current Contact
 function removeCurrentContact()
-{	
+{
 	contactListSettings.editContact = false;
 	contactArray.splice(contactListSettings.currentContactIndex, 1);
 }
@@ -272,7 +271,7 @@ function updateContactList()
 	// Clearing the Current Contact List
 	var contactListId = document.getElementById("contactList");
 	contactListId.innerHTML = "";
-		
+
 	// Searching or Viewing all Contacts
 	var theArray = [];
 	if(searching == true)
@@ -283,7 +282,7 @@ function updateContactList()
 	{
 		theArray = contactArray;
 	}
-	
+
 	// Creating a Button for Each Contact
 	if(theArray.length > 0)
 	{
@@ -292,9 +291,9 @@ function updateContactList()
 			var contactName = document.createElement("button");
 			contactName.innerHTML = theArray[i].firstName + " " + theArray[i].lastName;
 			contactName.setAttribute("id", "contactIdNum" + i);
-			contactName.setAttribute("type", "button"); 
-			contactListId.appendChild(contactName);	
-			
+			contactName.setAttribute("type", "button");
+			contactListId.appendChild(contactName);
+
 			if(theArray[i].addToFavourites == true)
 			{
 				contactName.setAttribute("class", "favouriteContact btn btn-default");
@@ -321,10 +320,10 @@ function updateContactList()
 
 // Update Contact Details Section
 function updateContactDetailsSection()
-{	
+{
 	// Contact Name
 	document.getElementById("contactFullName").innerHTML = contactArray[contactListSettings.currentContactIndex].firstName + " " + contactArray[contactListSettings.currentContactIndex].lastName;
-	
+
 	// If the Contact is a Favourite
 	if(contactArray[contactListSettings.currentContactIndex].addToFavourites == true)
 	{
@@ -334,7 +333,7 @@ function updateContactDetailsSection()
 	{
 		document.getElementById("favContactStar").style.display = "none";
 	}
-	
+
 	// If Contact Has a Note
 	if(contactArray[contactListSettings.currentContactIndex].notes.length > 0 && typeof contactArray[contactListSettings.currentContactIndex].notes !== "undefined")
 	{
@@ -344,7 +343,7 @@ function updateContactDetailsSection()
 	{
 		document.getElementById("contactNotes").parentNode.parentNode.style.display = "none";
 	}
-	
+
 	// If Contact Has a Date of Birth
 	if(contactArray[contactListSettings.currentContactIndex].dateOfBirth != false)
 	{
@@ -356,13 +355,13 @@ function updateContactDetailsSection()
 		// Hide Row
 		document.getElementById("contactDateOfBirth").parentNode.parentNode.style.display = "none";
 	}
-	
+
 	// If the Contact Has a Phone Number
 	if(contactArray[contactListSettings.currentContactIndex].phoneNumber != "")
 	{
 		// Add Info to the Page
 		document.getElementById("contactPhoneNumber").innerHTML = contactArray[contactListSettings.currentContactIndex].phoneNumber;
-		
+
 		// Create Links
 		document.getElementById("sendTextIcon").setAttribute("href", "sms:" + (contactArray[contactListSettings.currentContactIndex].phoneNumber).toString());
 		document.getElementById("callPhoneNum").setAttribute("href", "tel:" + (contactArray[contactListSettings.currentContactIndex].phoneNumber).toString());
@@ -373,13 +372,13 @@ function updateContactDetailsSection()
 		// Hide Row
 		document.getElementById("callPhoneIcon").parentNode.parentNode.style.display = "none";
 	}
-	
+
 	// If the Contact Has An Email Address
 	if(contactArray[contactListSettings.currentContactIndex].emailAddress != "")
 	{
 		// Add Information to the Page
 		document.getElementById("sendEmail").innerHTML = contactArray[contactListSettings.currentContactIndex].emailAddress;
-		
+
 		// Create Links
 		document.getElementById("sendEmail").setAttribute("href", "mailto:" + (contactArray[contactListSettings.currentContactIndex].emailAddress).toString());
 		document.getElementById("sendEmailIcon").setAttribute("href", "mailto:" + (contactArray[contactListSettings.currentContactIndex].emailAddress).toString());
@@ -389,7 +388,7 @@ function updateContactDetailsSection()
 		// Hide Rows
 		document.getElementById("sendEmail").parentNode.parentNode.style.display = "none";
 	}
-	
+
 }
 
 // Edit Current Contact
@@ -407,13 +406,13 @@ function editCurrentContact()
 	{
 		// Change addBirthday button to editBirthday
 		swapBirthdayButton(true);
-		
+
 		// Set the values of the options in the Date of Birth select element to be equal to those of the current contact
 		document.getElementById("dobDate").value = contactArray[contactListSettings.currentContactIndex].dateOfBirth.getDate();
 		// Passing the index of the month into the monthValues array to get back the months name as a string
 		document.getElementById("dobMonth").value = monthValues[contactArray[contactListSettings.currentContactIndex].dateOfBirth.getMonth()];
 		document.getElementById("dobYear").value = contactArray[contactListSettings.currentContactIndex].dateOfBirth.getFullYear();
-		
+
 		// Displaying the Birthday date as a string on the page
 		document.getElementById("dob").innerHTML = returnReadableDateString(contactArray[contactListSettings.currentContactIndex].dateOfBirth.getDate(), contactArray[contactListSettings.currentContactIndex].dateOfBirth.getMonth(), contactArray[contactListSettings.currentContactIndex].dateOfBirth.getFullYear());
 	}
@@ -427,7 +426,7 @@ function editCurrentContact()
 		document.getElementById("dob").innerHTML = "";
 		document.getElementById("dob").style.display = "none";
 	}
-	
+
 	// If Contact is already a Favourite
 	if(contactArray[contactListSettings.currentContactIndex].addToFavourites == true)
 	{
@@ -447,7 +446,7 @@ function generateDates()
 		dayOptionElement.innerHTML = d;
 		document.getElementById("dobDate").add(dayOptionElement, d);
 	}
-	
+
 	// Add Months
 	for(var m = 0; m < 12; m++)
 	{
@@ -455,7 +454,7 @@ function generateDates()
 		monthOptionElement.innerHTML = monthValues[m];
 		document.getElementById("dobMonth").add(monthOptionElement, m + 1);
 	}
-	
+
 	// Add Years
 	var today = new Date();
 	var numberOfYears = 115;
@@ -474,7 +473,7 @@ function getDateObject()
 	var dobDateId = document.getElementById("dobDate").value;
 	var dobMonthName = document.getElementById("dobMonth").value;
 	var dobYearId = document.getElementById("dobYear").value;
-	
+
 	// Checking if the user has entered a full date
 	if(dobDateId != "Day" && dobMonthName != "Month" && dobYearId != "Year")
 	{
@@ -506,11 +505,11 @@ function showDateOfBirthValue()
 {
 	// Called when the user clicks save when adding a date of birth to a contact
 	var showDateOfBirthValue_date = getDateObject();
-	
+
 	if(showDateOfBirthValue_date != false)
 	{
 		document.getElementById("dob").innerHTML = returnReadableDateString(showDateOfBirthValue_date.getDate(), showDateOfBirthValue_date.getMonth(), showDateOfBirthValue_date.getFullYear());
-		
+
 		// Change addBirthday button to editBirthday
 		swapBirthdayButton(true);
 	}
@@ -529,7 +528,7 @@ function swapBirthdayButton(birthdayExists)
 	var dateOfBirthButtonButtonId = document.getElementById("dateOfBirthButton");
 	var birthdayButtonIconId = document.getElementById("birthdayButtonIcon");
 	var dateOfBirthButtonSpanId = document.getElementById("dateOfBirthButtonSpan");
-	
+
 	// Switching Between editBirthday and addBirthday
 	if(birthdayExists)
 	{
@@ -567,7 +566,7 @@ function clearInputFields()
 	document.getElementById("lName").value = "";
 	document.getElementById("phoneNum").value = "";
 	document.getElementById("email").value = "";
-	
+
 	// Clear Data Input Fields
 	clearDateInputFields();
 }
@@ -584,7 +583,7 @@ function sortContactsBy()
 {
 	// Select element where user says which property they would like to sort by
 	var alphaOrderId = document.getElementById("alphaOrder");
-	
+
 	if(alphaOrderId.value == "by First Name")
 	{
 		contactListSettings.sortByFirstName = true;
@@ -609,7 +608,7 @@ function sortContactsByFirstName()
 	{
 		var contactFirstNameA = a.firstName.toLowerCase();
 		var contactFirstNameB = b.firstName.toLowerCase();
-		
+
 		if(contactFirstNameA > contactFirstNameB)
 		{
 			return 1
@@ -633,7 +632,7 @@ function sortContactsByLastName()
 	{
 		var contactLastNameA = a.lastName.toLowerCase();
 		var contactLastNameB = b.lastName.toLowerCase();
-		
+
 		if(contactLastNameA > contactLastNameB)
 		{
 			return 1
@@ -655,15 +654,9 @@ function saveContactListData()
 	if(typeof (window.localStorage) != "undefined")
 	{
 		// Save Contact List
-		if(typeof(contactArray) != "undefined")
+		if(typeof(saveData) != "undefined")
 		{
-			window.localStorage.setItem("savedContactList", JSON.stringify(contactArray));
-		}
-		
-		// Save Contact List Settings
-		if(typeof(contactListSettings) != "undefined")
-		{
-			window.localStorage.setItem("savedContactListSettings", JSON.stringify(contactListSettings));
+			window.localStorage.setItem("savedData", JSON.stringify(saveData));
 		}
 	}
 	else
@@ -675,48 +668,44 @@ function saveContactListData()
 // Get Contact List
 function getSavedContactListData()
 {
-	if(typeof (window.localStorage) != "undefined")
+	var remoteSavedData;
+
+	var httpReq = new XMLHttpRequest();
+	httpReq.onreadystatechange = function() {
+	 if (httpReq.readyState == 4 && httpReq.status == 200) {
+		 remoteSavedData = httpReq.responseText;
+	 }
+	};
+	httpReq.open("GET", "database/default.json", false);
+	httpReq.send();
+
+	// Saved Contact List
+	savedData = JSON.parse(remoteSavedData);
+
+	contactArray = savedData.contacts;
+	contactListSettings = savedData.settings;
+	console.log(contactListSettings);
+	// Date of Birth Loop
+	for(var i = 0; i < contactArray.length; i++)
 	{
-		// Saved Contact List
-		if(typeof(window.localStorage.savedContactList) != "undefined")
+		if(contactArray[i].dateOfBirth != false)
 		{
-			contactArray = JSON.parse(window.localStorage.savedContactList);
-			
-			// Date of Birth Loop
-			for(var i = 0; i < contactArray.length; i++)
-			{
-				if(contactArray[i].dateOfBirth != false)
-				{
-					// Cast back to a date object
-					contactArray[i].dateOfBirth = new Date(contactArray[i].dateOfBirth);
-				}
-				else
-				{
-					// set the dateOfBirth property to false
-					contactArray[i].dateOfBirth = false;
-				}
-			}
+			// Cast back to a date object
+			contactArray[i].dateOfBirth = new Date(contactArray[i].dateOfBirth);
 		}
-		
-		// Saved Contact List Settings
-		if(typeof(window.localStorage.savedContactListSettings) != "undefined")
+		else
 		{
-			contactListSettings = JSON.parse(window.localStorage.savedContactListSettings);
+			// set the dateOfBirth property to false
+			contactArray[i].dateOfBirth = false;
 		}
-	}
-	else
-	{
-		alert("There is no storage available to save your contact list");
 	}
 }
 
 // Clear Contact List
 function clearSavedContactList()
 {
-	if(typeof(window.localStorage.savedContactList) != "undefined")
-	{
-		window.localStorage.clear();
-	}
 	contactArray = [];
+	contactListSettings = {};
+
 	updateContactList();
 }

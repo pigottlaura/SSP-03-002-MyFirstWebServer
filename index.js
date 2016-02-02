@@ -58,6 +58,10 @@ var myServer = http.createServer(function(req, res){
   }else if(typeOfResource == "woff")
   {
     contentType = "font/" + typeOfResource;
+  }else if(typeOfResource == "json")
+  {
+    contentType = "application/" + typeOfResource;
+    console.log(contentType);
   }
 
   // Checking if there is content in the resource variable
