@@ -18,7 +18,7 @@ fs.readdir("./html", function(err, data){
   // Looping through each resource in the directory
   for(d in data){
     // Logging out the name of each file in the directory
-    console.log(data[d]);
+    //console.log(data[d]);
   }
 });
 
@@ -29,40 +29,47 @@ var myServer = http.createServer(function(req, res){
   // if the requested url was "/", otherwise the requested requestedResource
   // is equal to whatever url was entered
   var requestedResource = req.url == "/" ? "/index.html" : req.url;
+  console.log("Recieved request for " + requestedResource);
 
   // Getting the filetype of the resource by splitting the
   // url at the "." and then taking the second half of this
   // string
   var typeOfResource = requestedResource.split(".")[1];
-  console.log(typeOfResource);
 
   // Creating a variable to store the status code and content
   // type for the response header (so I can change it depending on
   // if I could locate the resource or not, and what type of resource
   // it is).
-  var statusCode = 200;
-  var contentType = "text/html";
+  var statusCode;
+  var contentType;
+  resource = fs.readFileSync("./html" + requestedResource);
 
-  // If the requestedResource is the homepage
-  if(requestedResource == "/index.html")
+  // Checking what type of resource the request was for
+  if(typeOfResource == "html" || typeOfResource == "css" || typeOfResource == "js")
   {
-    resource = fs.readFileSync("./html" + requestedResource);
-    res.write(resource);
+    contentType = "text/" + typeOfResource;
   }
-  else {
+  else if(typeOfResource == "png" || typeOfResource == "jpg")
+  {
+    contentType = "image/" + typeOfResource;
+  }
+
+  // Checking if there is content in the resource variable
+  if(resource.length > 1)
+  {
+    statusCode = 200;
+  }else {
     statusCode = 404;
 
     // Writing some HTML to the response body
     res.write("<h1>Sorry :(</h1>We couldn't find what you were looking for.<br>You sent a request for " + requestedResource);
   }
 
-  if(typeOfResource == "png" || typeOfResource == "jpg")
-  {
-    console.log("HIIIIIIIIIIIIIIII");
-  }
-
   // Adding the content type to the response header
   res.writeHead(statusCode, {"Content-Type" : contentType});
+
+  // Writing the resource to the body of the response
+  res.write(resource);
 
   // Sending the response back to the client
   res.end();
