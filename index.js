@@ -5,11 +5,21 @@ var http = require("http");
 // Creating a new server, with a callback function that will be
 // called everytime a request is received by the server
 var myServer = http.createServer(function(req, res){
-  // Adding the content type to the response header
-  res.writeHead(200, {"Content-Type" : "text/html"});
+  // Using a ternary operator to set the default page to index.html,
+  // if the requested url was "/", otherwise the requested requestedResource
+  // is equal to whatever url was entered
+  var requestedResource = req.url == "/" ? "/index.html" : req.url;
+
+  // If the requestedResource is the homepage
+  if(requestedResource == "/index.html")
+  {
+    // Adding the content type to the response header
+    res.writeHead(200, {"Content-Type" : "text/html"});
+    res.write("HOMEPAGE!!!");
+  }
 
   // Writing some HTML to the response body
-  res.write("<h1>Testing my Server</h1><br>You sent a request for " + req.url);
+  res.write("<h1>Testing my Server</h1><br>You sent a request for " + requestedResource);
 
   // Sending the response back to the client
   res.end();
