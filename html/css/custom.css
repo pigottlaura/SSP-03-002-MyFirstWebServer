@@ -1,0 +1,138 @@
+/* CUSTOM CSS STYLESHEET */
+
+.btn span {
+	font-size: 18px;
+}
+.btn span, #contactDetailsPage .glyphicon, #birthdayArea {
+	cursor: pointer;
+}
+.btn-lg span {
+	display: inline-block;
+	padding: 0 3%;
+}
+.container {
+	/* Main container */
+	width: 800px;
+}
+.container > div.row{
+	/* Main containing rows */
+	background-color: #E3E3E3;
+	border: 1px solid black;
+	padding: 1%;
+}
+.container > div.row .row {
+	/* All other rows within the main containing rows */
+	padding: 2% 0;
+}
+.favouriteContact {
+	/* Favourite contact font colour when viewed on the homepage */
+	/*color: #0000FF;*/
+}
+.modal button {
+	width: 48%;
+}
+.modal button.btn-warning {
+	width: 100%;
+}
+.modal span, .modal button {
+	display: inline !important;
+}
+
+a {
+	display:block;
+}
+body {
+	background-color: #F3F3F3;
+}
+button{
+	width: 100%;
+	margin: 2% 0;
+	padding: 0;
+}
+button a, button a:hover {
+	text-decoration: none;
+}
+div.btn {
+	overflow: visible;
+	width: 100%;
+}
+div.btn span {
+	display: block !important;
+	padding: 1em 0;
+	height: 3.2em;
+}
+input{
+	width: 100%;
+}
+label {
+	display: block;
+	width: 100%;
+}
+textarea {
+	width: 100%;
+}
+
+#addEditPage span[class*="star"]{
+	color: #000000;
+	font-size: 5em;
+}
+#alphaOrder {
+	width: 100%;
+}
+#contactDetailsHeading * {
+	float: left;
+}
+#contactDetailsPage .glyphicon {
+	font-size: 2.2em;
+	padding: 0.6em 0;
+	float: right;
+}
+#contactDetailsPage .glyphicon-star {
+	padding: 0.05em 0.6em;
+	float: none;
+}
+#contactDetailsPage .glyphicon-star, h4, span {
+	cursor: default;
+}
+#dob {
+	background-color: #FFFFFF;
+	border: 1px solid #999999;
+}
+#dobDate, #dobYear {
+	display: inline-block;
+	width: 28%;
+}
+#dobMonth {
+	display: inline-block;
+	width: 41%;
+}
+#favContact, #dobArea, #dobLabel, #removeContactButton, #dob {
+	display: none;
+}
+#favContact:checked ~ label[for="favContact"] span, #favContactStar{
+	color: #F7F700;
+}
+#removeContactButton {
+	background-color: #FFADBB;
+}
+
+@media screen and (max-width: 799px) {
+    .container {
+		/* Main container */
+		width: 100%;
+	}
+	.container > div.row {
+		/* Main containing rows */
+		padding: 4% 6%;
+	}
+	.container > div.row .row {
+		/* All other rows within the main containing rows */
+		padding: 2% 0;
+	}
+	.btn span {
+		display: block;
+		padding: 3% 0;
+		font-size: 12px;
+	}
+	
+}

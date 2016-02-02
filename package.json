@@ -1,0 +1,19 @@
+{
+  "name": "ssp-03-002-myfirstwebserver",
+  "version": "1.0.0",
+  "description": "Creating my first web server using the HTTP module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pigottlaura/SSP-03-002-MyFirstWebServer.git"
+  },
+  "author": "Laura Pigott",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pigottlaura/SSP-03-002-MyFirstWebServer/issues"
+  },
+  "homepage": "https://github.com/pigottlaura/SSP-03-002-MyFirstWebServer#readme"
+}
