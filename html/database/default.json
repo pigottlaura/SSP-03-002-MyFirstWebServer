@@ -2,7 +2,8 @@
   "settings": {
     "currentContactIndex": -1,
     "editContact": false,
-    "sortByFirstName": false
+    "sortByFirstName": false,
+    "httpPutAddress": "/database/"
   },
   "contacts": [
     {

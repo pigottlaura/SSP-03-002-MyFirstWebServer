@@ -2,12 +2,12 @@
 
 var contactArray = [];
 var contactListSettings = {};
+getSavedContactListData();
+
 var saveData = {settings: contactListSettings, contacts: contactArray};
 
 var searchResults = [];
 var searching = false;
-
-getSavedContactListData();
 
 // Month Array
 var monthValues = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -651,18 +651,11 @@ function sortContactsByLastName()
 // Save Contact List
 function saveContactListData()
 {
-	if(typeof (window.localStorage) != "undefined")
-	{
-		// Save Contact List
-		if(typeof(saveData) != "undefined")
-		{
-			window.localStorage.setItem("savedData", JSON.stringify(saveData));
-		}
-	}
-	else
-	{
-		alert("There is no storage available to save your contact list");
-	}
+	var httpReq = new XMLHttpRequest();
+	httpReq.open("PUT", "/", true);
+	httpReq.setRequestHeader("Content-Type", "application/json");
+	httpReq.send(JSON.stringify(saveData));
+	console.log(saveData);
 }
 
 // Get Contact List
@@ -676,7 +669,7 @@ function getSavedContactListData()
 		 remoteSavedData = httpReq.responseText;
 	 }
 	};
-	httpReq.open("GET", "database/default.json", false);
+	httpReq.open("GET", "/database/default.json" + "default.json", false);
 	httpReq.send();
 
 	// Saved Contact List
@@ -684,7 +677,7 @@ function getSavedContactListData()
 
 	contactArray = savedData.contacts;
 	contactListSettings = savedData.settings;
-	console.log(contactListSettings);
+
 	// Date of Birth Loop
 	for(var i = 0; i < contactArray.length; i++)
 	{
@@ -704,8 +697,8 @@ function getSavedContactListData()
 // Clear Contact List
 function clearSavedContactList()
 {
-	contactArray = [];
-	contactListSettings = {};
+	//contactArray = [];
+	//contactListSettings = {};
 
 	updateContactList();
 }
