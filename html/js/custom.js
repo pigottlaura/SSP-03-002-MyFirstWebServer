@@ -669,7 +669,7 @@ function getSavedContactListData()
 		 remoteSavedData = httpReq.responseText;
 	 }
 	};
-	httpReq.open("GET", "/database/default.json" + "default.json", false);
+	httpReq.open("GET", "/testing.json", false);
 	httpReq.send();
 
 	// Saved Contact List
